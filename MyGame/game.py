@@ -4,6 +4,7 @@ import random
 
 import tanks
 import level
+import sounds
 
 class MyGame(object):
     def __init__(self):
@@ -47,6 +48,9 @@ class MyGame(object):
         self.right_state = False
         self.m_timeLast1 = pygame.time.get_ticks()  #标记按键间隔 - 当键盘按键持续按压时使用-用户1按键
         self.m_timeLast2 = pygame.time.get_ticks()  #标记按键间隔 - 当键盘按键持续按压时使用-用户2按键
+
+        #声音
+        self.m_sound = sounds.GameSound()
 
     #初始化
     def init(self):
@@ -154,6 +158,7 @@ class MyGame(object):
                     self.m_userTank1.loadTankMod("./images/myTank/tank_T1_0.png", self.m_userPos1)
                     self.m_userTank2 = tanks.Tank()
                     self.m_userTank2.loadTankMod("./images/myTank/tank_T2_0.png", self.m_userPos2)
+                self.m_sound.m_startSound.play()
                 return True
 
     #结束界面
@@ -383,6 +388,8 @@ class MyGame(object):
         pygame.time.set_timer(self.CPU_ADD_EVENT, 1000)
         pygame.time.set_timer(self.UPDATE_LOOP_EVENT, 50)
         pygame.time.set_timer(self.BULLET_MOVE_EVENT, 20)
+
+        self.m_map.show_switch_stage(self.m_screen, self.m_width, self.m_height, self.m_map.m_stage)
 
         #新关卡开始加载
         self.loadLevelTobegin()

@@ -41,7 +41,7 @@ class Map(object):
         content_str = f"第 {stage} 关"
         content_surf = font.render(content_str, True, self.m_fontColor)
         rect = content_surf.get_rect()
-        rect.midtop(width/2, heigth/2)
+        rect.midtop = width/2, heigth/2
         screen.blit(self.m_bgImg_surf, (0,0))
         screen.blit(content_surf, rect)
         pygame.display.update()
