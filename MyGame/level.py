@@ -21,15 +21,11 @@ class Map(object):
         self.m_fontColor = (100,100,100)
         self.m_width = width
         self.m_height = height
-        self.m_oldHomeImg = './images/home/home2.png' 
-        self.m_oldHome = pygame.image.load(self.m_oldHomeImg)
-        self.m_oldHomePos = [3+12*24, 24*24+3]
-        #玩家坦克
-        self.userTank1 = tanks.Tank()
-        self.userTank2 = tanks.Tank()
-        #CPU坦克
-        self.m_cpuNum = 0          #CPU坦克个数
-        self.m_cpuTanks = pygame.sprite.Group()
+        self.m_oldHome = scene.MyHome()
+        self.m_oldHome.rect.topleft = [3+12*24, 24*24+3]
+        #老家被击中事件
+        self.m_isHitTime = None
+        self.m_isOver = False
 
     #大本营
     def protect_home(self):
@@ -69,15 +65,20 @@ class Map(object):
             screen.blit(var_surf.m_iron, var_surf.rect)
         for var_surf in self.riverGroup:
             screen.blit(var_surf.m_iron, var_surf.rect)
-        screen.blit(self.m_oldHome, self.m_oldHomePos)
-
-    #显示玩家坦克
-    def show_userTank(self):
-        pass
-    #显示CPU
-    def show_cpuTank(self):
-        pass
-
+        if not self.m_isOver:
+            screen.blit(self.m_oldHome.m_home, self.m_oldHome.rect)
+        else:
+            #被击中动态显示
+            timeNow = pygame.time.get_ticks()
+            if self.m_isHitTime == None:
+                boomSurf = pygame.image.load("./images/others/boom_static.png")
+                screen.blit(boomSurf, self.m_oldHome.rect)
+                self.m_isHitTime = timeNow
+            elif timeNow-self.m_isHitTime < 100:
+                boomSurf = pygame.image.load("./images/others/boom_static.png")
+                screen.blit(boomSurf, self.m_oldHome.rect)
+            else:
+                screen.blit(self.m_oldHome.m_destroy, self.m_oldHome.rect)
 
 #第一关
 class Level1(Map):
