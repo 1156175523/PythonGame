@@ -2,6 +2,7 @@
 
 import pygame
 import random
+import sounds
 
 import bullet
 
@@ -40,6 +41,8 @@ class Tank(pygame.sprite.Sprite):
         self.m_boomSurf = pygame.image.load(self.m_boomImg)
         self.m_dieTime = None
         self.m_isLive = True
+        #声音
+        self.m_sound = sounds.GameSound()
 
     #加载坦克模型
     def loadTankMod(self, tankImg:str, pos:list):
@@ -70,6 +73,7 @@ class Tank(pygame.sprite.Sprite):
         self.m_state = stage
 
     def boom(self):
+        self.m_sound.m_blastSound.play()
         self.m_state = 4
 
     #显示坦克相关信息
@@ -286,11 +290,13 @@ class Tank(pygame.sprite.Sprite):
     def shoot(self):
         if self.m_state != 3:
             return
+
         shootTime = pygame.time.get_ticks()
         #logging.info(f"now bullets:[{len(self.m_bulletGroup)}]")
         if shootTime - self.m_lastShootTime < self.m_shootInterval and len(self.m_bulletGroup)>0:
             return
 
+        self.m_sound.m_fireSound.play()
         new_bullet = bullet.Bullet()
         new_bullet.turn(self.m_deriction)
         if self.m_deriction == g_up:

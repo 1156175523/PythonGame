@@ -209,6 +209,8 @@ class MyGame(object):
             if self.m_playMode == 2:
                 self.m_userTank2.show_init(self.m_screen, i)
             pygame.display.update()
+
+        self.m_sound.m_addSound.play()
         #坦克出现
         pygame.time.delay(200)
         self.m_map.show_map(self.m_screen)
@@ -293,6 +295,7 @@ class MyGame(object):
             ret1 = pygame.sprite.spritecollide(self.m_map.m_oldHome, self.m_userTank1.m_bulletGroup, True, None)
             if isinstance(ret1, list) and len(ret1) > 0:
                 self.m_map.m_isOver = True
+                self.m_sound.m_bangSound.play()
             #敌人子弹
             for enemyTank in self.m_cpuTanksGroup:
                 #场景的碰撞
@@ -309,6 +312,7 @@ class MyGame(object):
                 ret2 = pygame.sprite.spritecollide(self.m_map.m_oldHome, enemyTank.m_bulletGroup, True, None)
                 if isinstance(ret2, list) and len(ret2) > 0:
                     self.m_map.m_isOver = True
+                    self.m_sound.m_bangSound.play()
 
         #用户是否射击
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:

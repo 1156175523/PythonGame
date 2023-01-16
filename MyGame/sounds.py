@@ -24,7 +24,13 @@ if __name__ == '__main__':
     pygame.init()
     pygame.mixer.init()
     sound = GameSound()
-    sound.m_startSound.play()
+    #sound.m_startSound.play()
+    #sound.m_hitSound.play()   #打转
+    #sound.m_addSound.play()  #用户坦克刷新
+    #sound.m_bangSound.play()  #老家爆炸
+    #sound.m_blastSound.play() #被子弹击中
+    #sound.m_fireSound.play()    #射击
+    sound.m_GunfireSound.play()  #二号玩家射击声音
     while True:
         pygame.time.delay(1000)
         ret = sound.m_startSound.get_length()
