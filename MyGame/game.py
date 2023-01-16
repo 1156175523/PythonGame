@@ -22,7 +22,7 @@ class MyGame(object):
         self.m_userNum1 = 3       #多少条命
         self.m_userPos1 = [3 + 24 * 8, 3 + 24 * 24]   #玩家1初始位置
         self.m_userNum2 = 3
-        self.m_userPos2 = [3 + 24 * 12, 3 + 24 * 24]   #玩家2初始位置
+        self.m_userPos2 = [3 + 24 * 16, 3 + 24 * 24]   #玩家2初始位置
 
         self.m_enemyPosList = ([3, 3], [630/2-24-3, 3], [630-48-3, 3])
 
@@ -42,10 +42,16 @@ class MyGame(object):
                                 './images/enemyTank/enemy_4_0.png', './images/enemyTank/enemy_4_3.png']
 
         #按键标识
+        #-二号玩家
         self.up_state = False
         self.down_state = False
         self.left_state = False
         self.right_state = False
+        #-一号玩家
+        self.w_state = False
+        self.s_state = False
+        self.a_state = False
+        self.d_state = False
         self.m_timeLast1 = pygame.time.get_ticks()  #标记按键间隔 - 当键盘按键持续按压时使用-用户1按键
         self.m_timeLast2 = pygame.time.get_ticks()  #标记按键间隔 - 当键盘按键持续按压时使用-用户2按键
 
@@ -216,8 +222,10 @@ class MyGame(object):
         self.m_map.show_map(self.m_screen)
         self.m_userTank1.show_tank(self.m_screen)
         if self.m_playMode == 2:
-            self.m_userTank2.show_init(self.m_screen, i)
+            #self.m_userTank2.show_init(self.m_screen, i)
+            self.m_userTank2.show_tank(self.m_screen)
         pygame.display.update()
+        self.m_sound.m_addSound.play()
 
     #键盘操作控制
     def playerOption(self, event:pygame.event.Event):
@@ -231,43 +239,85 @@ class MyGame(object):
                 self.left_state = True
             elif event.key == pygame.K_RIGHT:
                 self.right_state = True
+            elif event.key == pygame.K_w:
+                self.w_state = True
+            elif event.key == pygame.K_s:
+                self.s_state = True
+            elif event.key == pygame.K_a:
+                self.a_state = True
+            elif event.key == pygame.K_d:
+                self.d_state = True
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
                 self.up_state = False
-            if event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN:
                 self.down_state = False
-            if event.key == pygame.K_LEFT:
+            elif event.key == pygame.K_LEFT:
                 self.left_state = False
-            if event.key == pygame.K_RIGHT:
+            elif event.key == pygame.K_RIGHT:
                 self.right_state = False
+            elif event.key == pygame.K_w:
+                self.w_state = False
+            elif event.key == pygame.K_s:
+                self.s_state = False
+            elif event.key == pygame.K_a:
+                self.a_state = False
+            elif event.key == pygame.K_d:
+                self.d_state = False
         #--按键标识模块
 
         timeNow = pygame.time.get_ticks()
         #上下左右按键
-        if self.down_state:
+        #-一号玩家
+        if self.s_state:
             if timeNow - self.m_timeLast1 > 30:
                 self.m_userTank1.moveDown(self.m_map.brickGroup, self.m_map.ironGroup, self.m_cpuTanksGroup)
                 self.m_map.show_map(self.m_screen)
                 self.m_screen.blit(self.m_userTank1.m_tank, self.m_userTank1.rect)
                 self.m_timeLast1 = timeNow
-        if self.up_state:
+        if self.w_state:
             if timeNow - self.m_timeLast1 > 30:
                 self.m_userTank1.moveUp(self.m_map.brickGroup, self.m_map.ironGroup, self.m_cpuTanksGroup)
                 self.m_map.show_map(self.m_screen)
                 self.m_screen.blit(self.m_userTank1.m_tank, self.m_userTank1.rect)
                 self.m_timeLast1 = timeNow
-        if self.left_state:
+        if self.a_state:
             if timeNow - self.m_timeLast1 > 30:
                 self.m_userTank1.moveLeft(self.m_map.brickGroup, self.m_map.ironGroup, self.m_cpuTanksGroup)
                 self.m_map.show_map(self.m_screen)
                 self.m_screen.blit(self.m_userTank1.m_tank, self.m_userTank1.rect)
                 self.m_timeLast1 = timeNow
-        if self.right_state:
+        if self.d_state:
             if timeNow - self.m_timeLast1 > 30:
                 self.m_userTank1.moveRight(self.m_map.brickGroup, self.m_map.ironGroup, self.m_cpuTanksGroup)
                 self.m_map.show_map(self.m_screen)
                 self.m_screen.blit(self.m_userTank1.m_tank, self.m_userTank1.rect)
                 self.m_timeLast1 = timeNow
+        #-二号玩家
+        if self.down_state and self.m_playMode==2:
+            if timeNow - self.m_timeLast2 > 30:
+                self.m_userTank2.moveDown(self.m_map.brickGroup, self.m_map.ironGroup, self.m_cpuTanksGroup)
+                self.m_map.show_map(self.m_screen)
+                self.m_screen.blit(self.m_userTank2.m_tank, self.m_userTank2.rect)
+                self.m_timeLast2 = timeNow
+        if self.up_state and self.m_playMode==2:
+            if timeNow - self.m_timeLast2 > 30:
+                self.m_userTank2.moveUp(self.m_map.brickGroup, self.m_map.ironGroup, self.m_cpuTanksGroup)
+                self.m_map.show_map(self.m_screen)
+                self.m_screen.blit(self.m_userTank2.m_tank, self.m_userTank2.rect)
+                self.m_timeLast2 = timeNow
+        if self.left_state and self.m_playMode==2:
+            if timeNow - self.m_timeLast2 > 30:
+                self.m_userTank2.moveLeft(self.m_map.brickGroup, self.m_map.ironGroup, self.m_cpuTanksGroup)
+                self.m_map.show_map(self.m_screen)
+                self.m_screen.blit(self.m_userTank2.m_tank, self.m_userTank2.rect)
+                self.m_timeLast2 = timeNow
+        if self.right_state and self.m_playMode==2:
+            if timeNow - self.m_timeLast2 > 30:
+                self.m_userTank2.moveRight(self.m_map.brickGroup, self.m_map.ironGroup, self.m_cpuTanksGroup)
+                self.m_map.show_map(self.m_screen)
+                self.m_screen.blit(self.m_userTank2.m_tank, self.m_userTank2.rect)
+                self.m_timeLast2 = timeNow
         #子弹移动事件
         if event.type == self.BULLET_MOVE_EVENT:
             '''
@@ -275,6 +325,7 @@ class MyGame(object):
                 if not bullet.move(): #无效子弹移出-射出区域之外的子弹
                     self.m_userTank1.m_bulletGroup.remove(bullet)
             '''
+            #-一号玩家子弹
             self.m_userTank1.bulletMove()
             #检查与场景的碰撞
             pygame.sprite.groupcollide(self.m_userTank1.m_bulletGroup, self.m_map.brickGroup, True, True, None)
@@ -296,6 +347,31 @@ class MyGame(object):
             if isinstance(ret1, list) and len(ret1) > 0:
                 self.m_map.m_isOver = True
                 self.m_sound.m_bangSound.play()
+
+            #-二号玩家子弹
+            if self.m_playMode == 2:
+                self.m_userTank2.bulletMove()
+                #检查与场景的碰撞
+                pygame.sprite.groupcollide(self.m_userTank2.m_bulletGroup, self.m_map.brickGroup, True, True, None)
+                pygame.sprite.groupcollide(self.m_userTank2.m_bulletGroup, self.m_map.ironGroup, True, False, None)
+                #检查命中敌人
+                retEnemyTanks = pygame.sprite.groupcollide(self.m_userTank2.m_bulletGroup, self.m_cpuTanksGroup, True, False, None)
+                if retEnemyTanks != None:
+                    for bullet,enemyTankList in retEnemyTanks.items():
+                        #print(f"bullet type:{type(bullet)} enemy typ:{type(enemyTank)}") 
+                        '''
+                        for enemyTank in enemyTankList:
+                            enemyTank.boom()
+                            break   #杀掉一个敌人
+                        '''
+                        #图层渲染问题删除最后一个-最顶上的那个模型
+                        enemyTankList[-1].boom()
+                #检查是否击中老家
+                ret1 = pygame.sprite.spritecollide(self.m_map.m_oldHome, self.m_userTank2.m_bulletGroup, True, None)
+                if isinstance(ret1, list) and len(ret1) > 0:
+                    self.m_map.m_isOver = True
+                    self.m_sound.m_bangSound.play()
+
             #敌人子弹
             for enemyTank in self.m_cpuTanksGroup:
                 #场景的碰撞
@@ -305,6 +381,8 @@ class MyGame(object):
                 #用户坦克的碰撞
                 userTankGroupTmp = pygame.sprite.Group()
                 userTankGroupTmp.add(self.m_userTank1)
+                if self.m_playMode == 2:
+                    userTankGroupTmp.add(self.m_userTank2)
                 retEnemyTanks = pygame.sprite.groupcollide(enemyTank.m_bulletGroup, userTankGroupTmp, True, False, None)
                 for bullet,userTankList in retEnemyTanks.items():
                         userTankList[-1].boom()
@@ -315,13 +393,18 @@ class MyGame(object):
                     self.m_sound.m_bangSound.play()
 
         #用户是否射击
+        #-一号玩家射击
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             self.m_userTank1.shoot()
             #检查碰撞
             pygame.sprite.groupcollide(self.m_userTank1.m_bulletGroup, self.m_map.brickGroup, True, True, None)
             pygame.sprite.groupcollide(self.m_userTank1.m_bulletGroup, self.m_map.ironGroup, True, False, None)
-            for bullet in self.m_userTank1.m_bulletGroup:
-                self.m_screen.blit(bullet.m_bullet, bullet.rect)
+        #-二号玩家射击
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_RCTRL and self.m_playMode==2:
+            self.m_userTank2.shoot()
+            #检查碰撞
+            pygame.sprite.groupcollide(self.m_userTank2.m_bulletGroup, self.m_map.brickGroup, True, True, None)
+            pygame.sprite.groupcollide(self.m_userTank2.m_bulletGroup, self.m_map.ironGroup, True, False, None)
 
         #通过定时事件检查添加机器人
         if event.type == self.CPU_ADD_EVENT:
@@ -365,10 +448,18 @@ class MyGame(object):
             self.m_userTank1.m_state = 0
             self.m_userTank1.m_isLive = True
             self.m_userTank1.m_pos = self.m_userPos1.copy()
+        if self.m_playMode == 2 and not self.m_userTank2.m_isLive:
+            self.m_userNum2 -= 1
+            self.m_userTank2.rect.topleft = self.m_userPos2
+            self.m_userTank2.m_state = 0
+            self.m_userTank2.m_isLive = True
+            self.m_userTank2.m_pos = self.m_userPos2.copy()
 
         #更新画面
         self.m_map.show_map(self.m_screen)
         self.m_userTank1.show_tank(self.m_screen)
+        if self.m_playMode == 2:
+            self.m_userTank2.show_tank(self.m_screen)
         self.show_enemyTanks()
         pygame.display.update()
 
@@ -384,16 +475,18 @@ class MyGame(object):
         self.CPU_TURN_TIME_EVENT = pygame.USEREVENT + 2      #CPU转向的定时事件
         self.CPU_SHOOT_TIME_EVENT = pygame.USEREVENT + 3     #CPU发射子弹的频率
         self.CPU_ADD_EVENT = pygame.USEREVENT + 4            #CPU添加事件
-        self.UPDATE_LOOP_EVENT = pygame.USEREVENT + 5        #画面更新事件
-        self.BULLET_MOVE_EVENT = pygame.USEREVENT + 6        #子弹移动事件
+        self.BULLET_MOVE_EVENT = pygame.USEREVENT + 5        #子弹移动事件
         pygame.time.set_timer(self.CPU_MOVE_TIME_EVENT, 50) 
         pygame.time.set_timer(self.CPU_TURN_TIME_EVENT, 1000)
         pygame.time.set_timer(self.CPU_SHOOT_TIME_EVENT, 500)
         pygame.time.set_timer(self.CPU_ADD_EVENT, 1000)
-        pygame.time.set_timer(self.UPDATE_LOOP_EVENT, 50)
         pygame.time.set_timer(self.BULLET_MOVE_EVENT, 20)
 
         self.m_map.show_switch_stage(self.m_screen, self.m_width, self.m_height, self.m_map.m_stage)
+        pygame.time.delay(1000)
+        self.m_map.show_map(self.m_screen)
+        pygame.display.update()
+        pygame.time.delay(3000)
 
         #新关卡开始加载
         self.loadLevelTobegin()

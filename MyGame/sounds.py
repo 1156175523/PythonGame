@@ -5,19 +5,19 @@ class GameSound(object):
         # 加载音效
         pygame.mixer.init()
         self.m_addSound = pygame.mixer.Sound("./audios/add.wav")
-        self.m_addSound.set_volume(1)
+        self.m_addSound.set_volume(0.5)
         self.m_bangSound = pygame.mixer.Sound("./audios/bang.wav")
-        self.m_bangSound.set_volume(1)
+        self.m_bangSound.set_volume(0.5)
         self.m_blastSound = pygame.mixer.Sound("./audios/blast.wav")
-        self.m_blastSound.set_volume(1)
+        self.m_blastSound.set_volume(0.5)
         self.m_fireSound = pygame.mixer.Sound("./audios/fire.wav")
-        self.m_fireSound.set_volume(1)
+        self.m_fireSound.set_volume(0.3)
         self.m_GunfireSound = pygame.mixer.Sound("./audios/Gunfire.wav")
-        self.m_GunfireSound.set_volume(1)
+        self.m_GunfireSound.set_volume(0.5)
         self.m_hitSound = pygame.mixer.Sound("./audios/hit.wav")
-        self.m_hitSound.set_volume(1)
+        self.m_hitSound.set_volume(0.5)
         self.m_startSound = pygame.mixer.Sound("./audios/start.wav")
-        self.m_startSound.set_volume(1)
+        self.m_startSound.set_volume(0.5)
 
 
 if __name__ == '__main__':
